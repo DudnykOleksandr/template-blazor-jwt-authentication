@@ -1,0 +1,40 @@
+﻿@page "/Login"
+
+@inject BlazorAppLoginService BlazorAppLoginService
+@inject NavigationManager navigation
+
+<div class="row justify-content-center">
+    <div class="col-xl-4 d-flex p-3">
+        <RadzenCard Style="width: 100%;">
+            <RadzenTemplateForm Data=@("SimpleLogin")>
+                <RadzenLogin AllowRegister="false" AllowResetPassword="false" Login=@(async args =>await OnLoginAsync(args)) />
+                <RadzenLabel Style="color:red" Text="Wrong login or password" Visible=@loginFailed />
+            </RadzenTemplateForm>
+        </RadzenCard>
+    </div>
+</div>
+
+
+@code
+{
+    private bool loginFailed;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("Hello");
+    }
+
+    private async Task OnLoginAsync(LoginArgs args)
+    {
+        var loginResult = await BlazorAppLoginService.LoginAsync(args.Username, args.Password);
+        if (loginResult)
+        {
+            loginFailed = false;
+            navigation.NavigateTo("/", true);
+        }
+        else
+        {
+            loginFailed = true;
+        }
+    }
+}

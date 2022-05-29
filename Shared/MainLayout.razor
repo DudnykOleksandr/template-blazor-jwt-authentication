@@ -1,0 +1,39 @@
+﻿@inherits LayoutComponentBase
+
+@inject BlazorAppLoginService BlazorAppLoginService
+
+<PageTitle>Jwt authentication</PageTitle>
+
+<AuthorizeView Context="auth">
+    <Authorized>
+        <div class="page">
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+
+            <main>
+                <div class="top-row px-4">
+                    <div class="m-2">Welcome @auth.User.Identity.Name</div>
+                    <div>
+                        <RadzenButton ButtonStyle="ButtonStyle.Success" Click=@(async () => await OnLogoutAsync()) Text="Logout" />
+                    </div>
+                </div>
+
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
+        </div>
+    </Authorized>
+    <NotAuthorized Context="notAuth">
+        <Login />
+    </NotAuthorized>
+</AuthorizeView>
+
+@code
+{
+    private async Task OnLogoutAsync()
+    {
+        await BlazorAppLoginService.LogoutAsync();
+    }
+}
